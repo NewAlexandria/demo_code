@@ -48,7 +48,33 @@ describe :person do
   end
 
   context 'instance, ' do
+    subject { Person.new init_hash }
 
+    it 'loads properly' do
+      init_hash.each do |attr, val|
+        expect(subject.send attr).to eq(val)
+      end
+
+      expect(subject.birth_date.class).to eq(Date)
+    end
+
+    it 'has a date format of MM/DD/YYYY' do
+      expect(subject.birth_date).to eq('06/12/1978')
+    end
+  end
+
+private
+  
+  def init_hash
+    {
+      last_name:'Weishaupt',
+      first_name:'Adam',
+      middle_initial:'C',
+      gender:'M',
+      birth_date:'6/12/1978',
+      favorite_color:'plum'
+    }
   end
 
 end
+
