@@ -14,11 +14,11 @@ class Person
     end  if opts.is_a?(Hash) || opts.map{|e| e.to_a.size}.uniq.size == 1
   end
 
-  def birth_date
-    @birth_date.strftime('%m/%d/%Y')
+  def birth_date format='%m/%d/%Y'
+    @birth_date.strftime(format)
   end
 
   def gender
-    (@gender=='M') ? 'Male' : 'Female'
+    ['M','Male'].include?(@gender) ? 'Male' : 'Female'
   end
 end

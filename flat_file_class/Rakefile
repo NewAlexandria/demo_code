@@ -1,0 +1,38 @@
+task :default => 'report:export_all'
+
+namespace :report do
+  directory 'output'
+  load 'person.rb'
+
+  desc 'sorted by gender (girls up front), and last name (ascending)'
+  task :by_gender do
+    output_persons Person.all.sort{|a,b| [a.gender, a.last_name] <=> [b.gender, b.last_name] }
+  end
+
+  desc 'sorted by birth date (ascending)'
+  task :by_birth_date do
+    output_persons Person.all.sort{|a,b| a.birth_date('%Y%m%d') <=> b.birth_date('%Y%m%d') }
+  end
+
+  desc 'sorted by borth date (ascending)'
+  task :by_last_name do
+    output_persons Person.all.sort{|a,b| b.last_name <=> a.last_name }
+  end
+
+  desc 'export all'
+  task :export_all do # => [:by_gender, :by_birth_date, :by_last_name] do
+    puts 'Output 1'
+    Rake::Task['report:by_gender'].execute
+    puts ''
+    puts 'Output 2'
+    Rake::Task['report:by_birth_date'].execute
+    puts ''
+    puts 'Output 3'
+    Rake::Task['report:by_last_name'].execute
+  end
+end
+
+def output_persons persons, output_headers = [:last_name, :first_name, :gender, :birth_date, :favorite_color]
+  puts persons.map{|person| output_headers.map{|attr| person.send attr }.join(' ') }
+end
+

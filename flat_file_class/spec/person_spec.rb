@@ -63,7 +63,7 @@ describe :person do
       expect(subject.birth_date).to eq('06/12/1978')
     end
 
-    it 'has expands gender to a full word' do
+    it 'expands gender to a full word' do
       expect(subject.gender).to eq('Male')
     end
   end
