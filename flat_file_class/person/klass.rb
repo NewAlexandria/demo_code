@@ -23,7 +23,8 @@ module Loaders
 private
 
   def hash_from source, line
-    Hash[source[:headers].zip(line.split(source[:delim]).map(&:strip))].tap do |h|
+    line_elements = line.split(source[:delim]).map(&:strip)
+    Hash[source[:headers].zip(line_elements)].tap do |h|
       h[:birth_date] = Date.strptime( h[:birth_date].to_s.gsub('-','/'), '%m/%d/%Y' )
     end
   end

@@ -15,7 +15,10 @@ class Person
   end
 
   def birth_date
-    birth_date.strftime("%m/%d/%Y")
+    @birth_date.strftime('%m/%d/%Y')
   end
 
+  def gender
+    (@gender=='M') ? 'Male' : 'Female'
+  end
 end
