@@ -11,7 +11,7 @@ class Person
   def initialize opts={}
     opts.each do |k,v|
       send "#{k}=".to_sym, v
-    end  if opts.is_a?(Hash) || opts.map{|e| e.to_a.size}.uniq.size == 1
+    end  if valid_hashes_of_equal_length?(opts)
   end
 
   def birth_date format='%m/%d/%Y'
@@ -20,5 +20,11 @@ class Person
 
   def gender
     ['M','Male'].include?(@gender) ? 'Male' : 'Female'
+  end
+
+  private 
+
+  def valid_hashes_of_equal_length? opts
+    opts.is_a?(Hash) || opts.map{|e| e.to_a.size}.uniq.size == 1 
   end
 end
