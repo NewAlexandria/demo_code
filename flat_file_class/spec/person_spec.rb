@@ -1,7 +1,7 @@
 load 'person.rb'
 
 describe :person do
-  context 'class' do
+  context 'when drawing from sources' do
     subject { Person }
     let(:test_source) { Loaders::SOURCES.first }
 
@@ -23,7 +23,7 @@ describe :person do
         expect(subject.map(&:class).uniq).to      eq([Person])
       end
 
-      it "loaded headers correctly for an object" do
+      it 'loaded headers correctly for an element' do
         test_source.fetch(:headers, []).each do |header|
           expect(subject.shuffle.first.respond_to? header.to_sym ).to eq(true)
         end
@@ -34,11 +34,11 @@ describe :person do
     describe :all do
       subject { Person.all }
 
-        let(:total_records) do
-          Loaders::SOURCES.reduce(0) do |total, source|
-            total += File.readlines("sources/#{source[:name]}").size
-          end
+      let(:total_records) do
+        Loaders::SOURCES.reduce(0) do |total, source|
+          total += File.readlines("sources/#{source[:name]}").size
         end
+      end
 
       it 'is composed of all source file rows' do
         expect(subject.size).to eq(total_records)
@@ -47,7 +47,7 @@ describe :person do
 
   end
 
-  context 'instance' do
+  context 'or any instance' do
     subject { Person.new init_hash }
 
     it 'loads properly' do
