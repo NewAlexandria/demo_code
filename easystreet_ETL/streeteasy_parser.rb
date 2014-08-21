@@ -19,7 +19,7 @@ class EasyStreetScraper
       (page_source/'#results .listings .listing').collect do |listing|
         {
           :listing_class => listing_class,
-          :address       => address(listing),
+          :address       => street_address(listing),
           :unit          => unit(listing),
           :url           => url(listing),
           :price         => price(listing)
@@ -38,20 +38,28 @@ class EasyStreetScraper
 
   private
 
-  def address listing
-    (listing/'.details_title h5 a').inner_html 
+  def street_address listing
+    address[:street]
   end
 
   def unit listing
-    ((listing/'.details_title h5 a').inner_html.match(/^(.*#)(.*)/) || {})[2] 
+    address[:unit]
   end
 
   def url listing
-    '//streeteasy.com/' << (listing/'.details_title h5 a').first[:href].gsub(/\?.*/,'').to_s 
+    '//streeteasy.com/' << title.first[:href].gsub(/\?.*/,'').to_s 
   end
 
   def price listing
     (listing/'.price').inner_html.gsub(/[^0-9]/,'').to_i 
+  end
+
+  def title listing
+    @title ||= (listing/'.details_title h5 a') 
+  end
+
+  def address listing
+    @address ||= title.inner_html.match(/^(?<street>.*)\#(?<unit>.*)/) 
   end
 end
 
