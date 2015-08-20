@@ -1,4 +1,4 @@
-The MIT License (MIT)
+[The MIT License (MIT)](http://mit-license.org/)
 
 Copyright (c) 2014 
 

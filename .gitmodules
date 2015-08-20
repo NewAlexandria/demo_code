@@ -1,0 +1,15 @@
+[submodule "interview-test-ecosystem"]
+	path = interview-test-ecosystem
+	url = https://github.com/captap/interview-test-ecosystem.git
+[submodule "test_automation/bifocals_for_svn_rspec"]
+	path = test_automation/bifocals_for_svn_rspec
+	url = https://gist.github.com/2242c3fe72e16840a748.git
+[submodule "tricks/code_as_data_in_ruby"]
+	path = tricks/code_as_data_in_ruby
+	url = https://gist.github.com/6236408.git
+[submodule "integrations/ASU-Library-Access-Chrome"]
+	path = integrations/ASU-Library-Access-Chrome
+	url = https://github.com/NewAlexandria/ASU-Library-Access-Chrome-Extension.git
+[submodule "integrations/papers_we_love_extract"]
+	path = integrations/papers_we_love_extract
+	url = https://gist.github.com/d0ea7060d9ab8b7c7cd2.git
