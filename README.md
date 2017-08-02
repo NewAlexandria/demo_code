@@ -13,8 +13,12 @@ I encourage the reader to also look across the range of repos and community invo
 As above, in the directory of files.
 
 ## Personal repos
-  * [svnBlame](https://github.com/NewAlexandria/svnblame.vim) for Vim.
+You can see [a list of all repos I have originated](https://github.com/NewAlexandria?utf8=%E2%9C%93&tab=repositories&q=&type=source&language=).  Some highlights:
+
+  * [Klass Sextant](https://github.com/NewAlexandria/klassextant), a general mapper for analyzing code namespaces.
   * [Vim.ana](https://github.com/NewAlexandria/vim.ana) - Vim, configured as an IDE.
   * [Git visualizations using Omnigrafle](https://github.com/NewAlexandria/grittle).
   * My [dotfiles](https://github.com/NewAlexandria/dotfiles).
+  * [Crossing Guard](https://github.com/NewAlexandria/crossing_guard) task queue scheduler
+  * 
 
