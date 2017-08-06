@@ -22,3 +22,9 @@ You can see [a list of all repos I have originated](https://github.com/NewAlexan
   * [Crossing Guard](https://github.com/NewAlexandria/crossing_guard) task queue scheduler
   * 
 
+## Algorithm Sites
+
+An occassionally-collected list of sites
+
+* https://leetcode.com/
+* https://projecteuler.net/
