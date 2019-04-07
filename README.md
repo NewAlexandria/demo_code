@@ -12,7 +12,7 @@ I encourage the reader to also look across the range of repos and community invo
 
 As above, in the directory of files.
 
-## Personal repos
+### Personal repos
 You can see [a list of all repos I have originated](https://github.com/NewAlexandria?utf8=%E2%9C%93&tab=repositories&q=&type=source&language=).  Some highlights:
 
   * [Klass Sextant](https://github.com/NewAlexandria/klassextant), a general mapper for analyzing code namespaces.
@@ -22,9 +22,27 @@ You can see [a list of all repos I have originated](https://github.com/NewAlexan
   * [Crossing Guard](https://github.com/NewAlexandria/crossing_guard) task queue scheduler
   * 
 
+## Preparation
+
+### TicTacToe
+* https://www.half-real.net/tictactoe/
+* https://www.jesperjuul.net/ludologist/2003/12/28/255168-ways-of-playing-tic-tac-toe/
+* https://en.wikipedia.org/wiki/Tic-tac-toe_variants
+* https://en.wikipedia.org/wiki/Quantum_tic-tac-toe
+
+### Kotlin 
+
+* https://www.javatpoint.com/kotlin-environment-setup-command-line
+* https://play.kotlinlang.org/koans/overview
+* https://github.com/dbacinski/Design-Patterns-In-Kotlin
+
 ## Algorithm Sites
 
-An occassionally-collected list of sites
+An occasionally-collected list of sites
 
 * https://leetcode.com/
 * https://projecteuler.net/
+
+### Test sites
+
+* [Triplebyte](https://triplebyte.com/candidates/challenges/end)
