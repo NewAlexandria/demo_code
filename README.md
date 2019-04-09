@@ -35,6 +35,7 @@ You can see [a list of all repos I have originated](https://github.com/NewAlexan
 * https://www.javatpoint.com/kotlin-environment-setup-command-line
 * https://play.kotlinlang.org/koans/overview
 * https://github.com/dbacinski/Design-Patterns-In-Kotlin
+* https://gist.github.com/pkulak/7601200d51e148685b0f0337cd6c299b
 
 ## Algorithm Sites
 
