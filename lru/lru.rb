@@ -20,7 +20,7 @@ class LRUCache
       obj_ref = @hm[key]
       @xl.delete(obj_ref)
       @xl.unshift(obj_ref)
-      obj_ref[:value]
+      obj_ref ? obj_ref[:value] : nil
     end
 
 
@@ -35,7 +35,6 @@ class LRUCache
       @xl.unshift(new_val_obj)
       if @xl.size > max
         e = @xl.delete(@xl.last)
-        puts e.class.name.to_s
         hm.delete e[:key] if e
       end
     end
@@ -46,29 +45,50 @@ describe :lrucache do
   context 'when initialized to 2' do
     subject { LRUCache.new(2) }
 
-    let (:get_one) { subject.put("one", 1) }
-    let (:get_two) { subject.put("two", 2) }
-    it 'can lookup a first value after a second is inserted' do
-      expect(subject.get("one")).to eq(1)
+    context 'with two values inserted' do
+      before(:each) do
+        subject.put("one", 1)
+        subject.put("two", 2)
+      end
+
+      it 'can lookup a first value after a second is inserted' do 
+        expect(subject.get("one")).to eq(1)
+      end
     end
 
-    let (:get_three) { subject.put("three", 3) }
-    it 'cannot find the subject after a third is .put' do
-      expect(subject.get("two")).to raise_error
+    context 'with three values inserted' do
+      before(:each) do
+        subject.put("one", 1)
+        subject.put("two", 2)
+        subject.put("three", 3)
+      end
+
+      it 'cannot find the subject after a third is .put' do
+        expect(subject.get("one")).to be_nil
+      end
     end
 
-    let (:get_three) { subject.put("three", 3) }
-    it 'cannot find the next subject after a fourth is .put' do
-      expect(subject.get("one")).to raise_error
+    context 'with four values inserted' do
+      before(:each) do
+        subject.put("one", 1)
+        subject.put("two", 2)
+        subject.put("three", 3)
+        subject.put("four", 4)
+      end
+
+      it 'cannot find the next subject after a fourth is .put' do
+        expect(subject.get("one")).to be_nil
+      end
+
+      it 'can find the correct subject index after two puts' do
+        expect(subject.get("three")).to eq(3)
+      end
+
+      it 'can find the correct MRU index after two puts' do
+        expect(subject.get("four")).to eq(4)
+      end
     end
 
-    it 'can find the correct subject index after two puts' do
-      expect(subject.get("three")).to eq(3)
-    end
-
-    it 'can find the correct MRU index after two puts' do
-      expect(subject.get("four")).to eq(4)
-    end
   end
 end
 
