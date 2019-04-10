@@ -41,3 +41,25 @@ class LRUCache
     end
 
 end
+
+describe :lrucache do
+  context 'when initialized to 2' do
+    subject { LRUCache.new(2) }
+
+    it 'can lookup a first value after a second is inserted' do
+    end
+
+    it 'cannot find the LRU after a third is .put' do
+    end
+
+    it 'cannot find the next LRU after a fourth is .put' do
+    end
+
+    it 'can find the correct LRU index after two puts' do
+    end
+
+    it 'can find the correct MRU index after two puts' do
+    end
+  end
+end
+
