@@ -46,19 +46,28 @@ describe :lrucache do
   context 'when initialized to 2' do
     subject { LRUCache.new(2) }
 
+    let (:get_one) { subject.put("one", 1) }
+    let (:get_two) { subject.put("two", 2) }
     it 'can lookup a first value after a second is inserted' do
+      expect(subject.get("one")).to eq(1)
     end
 
-    it 'cannot find the LRU after a third is .put' do
+    let (:get_three) { subject.put("three", 3) }
+    it 'cannot find the subject after a third is .put' do
+      expect(subject.get("two")).to raise_error
     end
 
-    it 'cannot find the next LRU after a fourth is .put' do
+    let (:get_three) { subject.put("three", 3) }
+    it 'cannot find the next subject after a fourth is .put' do
+      expect(subject.get("one")).to raise_error
     end
 
-    it 'can find the correct LRU index after two puts' do
+    it 'can find the correct subject index after two puts' do
+      expect(subject.get("three")).to eq(3)
     end
 
     it 'can find the correct MRU index after two puts' do
+      expect(subject.get("four")).to eq(4)
     end
   end
 end
