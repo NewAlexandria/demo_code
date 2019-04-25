@@ -12,8 +12,6 @@ class Game
   end
 
   def self.reset
-    @e = Array.new
-    3.times { @e << ([nil] * 3) }
-    @e
+    Array.new.tap {|arr| 3.times { @e << ([nil] * 3) } }
   end
 end
