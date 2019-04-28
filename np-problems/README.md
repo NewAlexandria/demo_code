@@ -1,6 +1,6 @@
 # 99 Problems and NP Aint an Element of the Subsets
 
-While the trivial recursive solution to the problem would be easy to iterate over, efficiently solutions at scale will involve some more complex handling. 
+While the trivial recursive solution to the problem would be easy to iterate over, efficiently solutions at scale will involve some more complex handling.  Also, the interest of a _demonstration_ means addressing more issues with detail.
 
 ### Context
 
@@ -13,6 +13,8 @@ Since this exercise is principally one to demonstrate code thinking, it's reason
 I've also not decided to search for all solutions, vs whatever is the first hit.  
 
 The most trivial answer will be when any menu item is an even denominator do the total target spent.  Since this requires no recursion or cache/branch solutions, I think it's reasonable to have a minimal check for such, before searching for a 'variety' solution. 
+
+For a class that can handle a wide range of problem-spaces, an optimal strategy may attempt some cursory analysis of the input, before deciding a strategy.
 
 So this leaves us with:
 
