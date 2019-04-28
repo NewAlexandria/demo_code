@@ -14,3 +14,20 @@ I've also not decided to search for all solutions, vs whatever is the first hit.
 
 The most trivial answer will be when any menu item is an even denominator do the total target spent.  Since this requires no recursion or cache/branch solutions, I think it's reasonable to have a minimal check for such, before searching for a 'variety' solution. 
 
+So this leaves us with:
+
+#### Problem Cases
+
+*Each in need of an algorithm*
+
+* trivial cases
+* basic recursion
+* cache solutions
+* branching solutions
+
+#### Sidecars
+
+* time benchmarking
+* input generator
+  * input constraints
+* tests
