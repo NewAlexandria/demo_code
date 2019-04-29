@@ -17,7 +17,16 @@ class FoodOrder
   end
 
   def spend_target non_trivial:false
-    return @order if !non_trivial && trivial_order
+    if non_trivial
+      first_order_search
+        #|| all_order_search
+        #|| order_search_includes items.sample
+        #|| cached_order_search
+        #|| branching_order_search
+    else
+      trivial_order
+    end
+    @order
   end
 
   # It would be ideal to do some 'type' checking here on the input
@@ -40,6 +49,9 @@ class FoodOrder
   def trivial_order
     spam = items.detect {|item| target % item.values[0].to_i == 0 }
     @order = [spam.keys.first] * (target/spam.values.first.to_i) if spam
+  end
+
+  def first_order_search
   end
 end
 
