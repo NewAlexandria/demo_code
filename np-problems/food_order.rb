@@ -10,10 +10,14 @@ end
 
 class FoodOrder
   attr_accessor :items
-  attr_reader   :target
+  attr_reader   :target, :order
 
   def initialize filename
     @target, @items = self.class.menu_parse filename
+  end
+
+  def spend_target
+    return @order if trivial_order
   end
 
   # It would be ideal to do some 'type' checking here on the input
@@ -27,6 +31,14 @@ class FoodOrder
 
 		items = raw[1..-1].map {|i| Hash[*i] }
     return raw[0][0].to_i, items
+  end
+
+  private
+
+  def trivial_order
+    spam = items.detect {|item| target % item.values[0].to_i == 0 }
+    @order = [spam.keys.first] * (target/spam.values.first.to_i) if spam
+    @order
   end
 end
 

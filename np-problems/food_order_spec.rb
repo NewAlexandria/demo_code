@@ -1,15 +1,21 @@
 load 'food_order.rb'
 
 describe :food_order do
-  context 'with one item' do
-    xit 'having even division' do
-    end
+  context 'for a spend_target with a' do
+    subject { FoodOrder.new('menu.txt') }
 
-    xit 'having uneven division' do
+    describe :trivial_order do
+      before(:each) do
+        subject.spend_target 
+      end
+
+      it 'builds an order' do
+        expect(subject.order).not_to be_nil
+      end
     end
   end
 
-  context 'with multiple items' do
+  context 'for a non-trivial spend_target' do
   end
 
   context 'can initialize' do
