@@ -14,6 +14,7 @@ class FoodOrder
 
   def initialize filename
     @target, @items = self.class.menu_parse filename
+    @scratch_order ||= []
   end
 
   def spend_target non_trivial:false
@@ -44,6 +45,8 @@ class FoodOrder
 
   private
 
+  attr_accessor :scratch_order
+
   # Uses modulus to look for the first item 
   # that can be ordered in-multiple to make an order
   def trivial_order
@@ -51,7 +54,17 @@ class FoodOrder
     @order = [spam.keys.first] * (target/spam.values.first.to_i) if spam
   end
 
-  def first_order_search
+  def first_order_search searching:prices, subtotal:0, ceil_idx:0, scan_idx:0
+    if subtotal == target
+      return @order = @scratch_order
+    else
+      @scratch_order << searching.pop
+      first_order_search searching, @scratch_order.sum
+    end
+  end
+
+  def prices
+    @prices ||= items.map(&:values).flatten.sort
   end
 end
 
