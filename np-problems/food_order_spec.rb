@@ -1,9 +1,9 @@
 load 'food_order.rb'
 
 describe :food_order do
-  context 'for a spend_target with a' do
-    subject { FoodOrder.new('menu.txt') }
+  subject { FoodOrder.new('menu.txt') }
 
+  context 'for a spend_target with a' do
     describe :trivial_order do
       before(:each) do
         subject.spend_target 
@@ -16,10 +16,18 @@ describe :food_order do
   end
 
   context 'for a non-trivial spend_target' do
+    describe :trivial_order do
+      before(:each) do
+        subject.spend_target non_trivial:true
+      end
+
+      it 'builds an order' do
+        expect(subject.order).not_to be_nil
+      end
+    end
   end
 
   context 'can initialize' do
-    subject { FoodOrder.new('menu.txt') }
 
     describe :menu_parse do
       it 'and translate a file' do

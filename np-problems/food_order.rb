@@ -16,8 +16,8 @@ class FoodOrder
     @target, @items = self.class.menu_parse filename
   end
 
-  def spend_target
-    return @order if trivial_order
+  def spend_target non_trivial:false
+    return @order if !non_trivial && trivial_order
   end
 
   # It would be ideal to do some 'type' checking here on the input
@@ -35,10 +35,11 @@ class FoodOrder
 
   private
 
+  # Uses modulus to look for the first item 
+  # that can be ordered in-multiple to make an order
   def trivial_order
     spam = items.detect {|item| target % item.values[0].to_i == 0 }
     @order = [spam.keys.first] * (target/spam.values.first.to_i) if spam
-    @order
   end
 end
 
