@@ -1,3 +1,5 @@
+require "logger"
+
 class Symbol
   def with(*args, &block)
     lambda { |object| object.public_send(self, *args, &block) }
@@ -19,7 +21,7 @@ class FoodOrder
 
   def spend_target non_trivial:false
     if non_trivial
-      first_order_search
+      single_order_search
         #|| all_order_search
         #|| order_search_includes items.sample
         #|| cached_order_search
@@ -27,7 +29,7 @@ class FoodOrder
     else
       trivial_order
     end
-    @order
+    menu_items_from @order
   end
 
   # It would be ideal to do some 'type' checking here on the input
@@ -43,28 +45,60 @@ class FoodOrder
     return raw[0][0].to_i, items
   end
 
-  private
-
-  attr_accessor :scratch_order
-
   # Uses modulus to look for the first item 
   # that can be ordered in-multiple to make an order
   def trivial_order
     spam = items.detect {|item| target % item.values[0].to_i == 0 }
-    @order = [spam.keys.first] * (target/spam.values.first.to_i) if spam
+    @order = [spam.values.first] * (target/spam.values.first.to_i) if spam
   end
 
-  def first_order_search searching:prices, subtotal:0, ceil_idx:0, scan_idx:0
-    if subtotal == target
-      return @order = @scratch_order
+  def single_order_search compute_cap:14
+    if (prices.size <= compute_cap)
+      @order = all_order_search.sample
     else
-      @scratch_order << searching.pop
-      first_order_search searching, @scratch_order.sum
+      raise RangeError.new('','')
+    end
+  rescue RangeError
+    logger.warn "Brute force calculation may cause machine to halt or crash. To force execution, pass a :compute_cap larger than #{prices.size}"
+  end
+
+  def all_order_search
+    @all_order ||= available_orders.select {|prices| prices.sum == target }
+  end
+
+  private
+
+  attr_accessor :scratch_order
+
+  def available_orders
+    all_permutations.reject {|prices| prices.sum > target }
+  end
+
+  def all_permutations
+    (min_permutation..max_permutation).reduce([]) do |a,max|
+      a += prices.repeated_permutation(max).to_a
     end
   end
 
+  def min_permutation
+    @min_perm ||= prices.index(
+      prices.detect {|price| target % price == 0 }
+    ) + 1
+  end
+
+  def max_permutation
+    @max_perm ||= prices.reverse.index(
+      prices.reverse.detect {|price| target % price == 0 }
+    ) + 1
+  end
+
   def prices
-    @prices ||= items.map(&:values).flatten.sort
+    @prices ||= items.map(&:values).flatten.map(&:to_i).sort
+  end
+
+  def menu_items_from order
+    hitems = items.reduce(&:merge)
+    order.map {|price| hitems.key(price.to_s) }
   end
 end
 
