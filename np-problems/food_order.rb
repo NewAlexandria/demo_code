@@ -51,5 +51,9 @@ class FoodOrder
     hitems = items.reduce(&:merge)
     order.map {|price| hitems.key(price.to_s) }
   end
+  
+  def logger
+    logger = Logger.new(STDOUT)
+  end
 end
 
