@@ -22,6 +22,12 @@ module FoodOrderProfiling
         mem_from(report) >= MEM_GC_LIMIT
       end
       logger.info "Mem counts for #{min_permutation} to #{max_permutation} are #{mem_uses.inspect}"
+
+      while (mem_itr_step * mem_uses.last) < MEM_GC_LIMIT do
+        mem_uses << (mem_itr_step * mem_uses.last)
+      end
+
+      mem_uses.count
     end
 
     private
