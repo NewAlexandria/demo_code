@@ -1,6 +1,7 @@
 require "logger"
 load "food_order/inputs.rb"
 load "food_order/search.rb"
+load "food_order/profiling.rb"
 
 class Symbol
   def with(*args, &block)
@@ -18,6 +19,7 @@ class FoodOrder
 
   include FoodOrderInputs
   include FoodOrderSearch
+  include FoodOrderProfiling
 
   def initialize filename
     @target, @items = self.class.menu_parse filename

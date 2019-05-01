@@ -1,0 +1,15 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    benchmark-memory (0.1.2)
+      memory_profiler (~> 0.9)
+    memory_profiler (0.9.13)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  benchmark-memory
+
+BUNDLED WITH
+   2.0.1
