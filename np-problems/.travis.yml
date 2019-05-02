@@ -1,0 +1,11 @@
+---
+language: ruby
+sudo: required
+rvm:
+  - 2.4.1
+
+install:
+  - bundle
+
+script:
+  - rspec np-problems/food_order_spec.rb
