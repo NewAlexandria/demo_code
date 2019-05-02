@@ -21,8 +21,10 @@ class FoodOrder
   include FoodOrderSearch
   include FoodOrderProfiling
 
+  # precompute iteration bounds with file init
   def initialize filename
     @target, @items = self.class.menu_parse filename
+    @cap = max_safe_permutations
     @scratch_order ||= []
   end
 
@@ -53,7 +55,7 @@ class FoodOrder
   end
   
   def logger
-    logger = Logger.new(STDOUT)
+    @logger ||= Logger.new(STDOUT)
   end
 end
 

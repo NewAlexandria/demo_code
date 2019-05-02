@@ -17,13 +17,17 @@ module FoodOrderProfiling
     # Profile each permutation cap until we project underperformance
     # stop at the GC limit, to ensure a consistent memory state
     def max_safe_permutations
-      memory_step_profile
+      if @max_safe_permutations
+        return @max_safe_permutations
+      else
+        memory_step_profile
 
-      while (mem_itr_step * mem_uses.last) < mem_available_limit do
-        mem_uses << (mem_itr_step * mem_uses.last)
+        while (mem_itr_step * mem_uses.last) < mem_available_limit do
+          mem_uses << (mem_itr_step * mem_uses.last)
+        end
+
+        @max_safe_permutations = mem_uses.count
       end
-
-      mem_uses.count
     end
 
     private

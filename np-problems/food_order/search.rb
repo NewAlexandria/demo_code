@@ -14,11 +14,11 @@ module FoodOrderSearch
       @order = [spam.values.first] * (target/spam.values.first.to_i) if spam
     end
 
-    def single_order_search compute_cap:14
-      if (prices.size <= compute_cap)
+    def single_order_search allow_swapping:false
+      if (prices.size <= max_safe_permutations) || allow_swapping
         @order = all_order_search.sample
       else
-        logger.error "Brute force calculation may cause machine to halt or crash. To force execution, pass a :compute_cap larger than #{prices.size}"
+        logger.error "Brute force calculation may cause machine to halt or crash because you lack enough available memory. To force execution, pass in :allow_swapping"
       end
     end
 
