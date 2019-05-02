@@ -1,6 +1,7 @@
 require "logger"
 load "food_order/inputs.rb"
 load "food_order/search.rb"
+load "food_order/profiling.rb"
 
 class Symbol
   def with(*args, &block)
@@ -18,9 +19,12 @@ class FoodOrder
 
   include FoodOrderInputs
   include FoodOrderSearch
+  include FoodOrderProfiling
 
+  # precompute iteration bounds with file init
   def initialize filename
     @target, @items = self.class.menu_parse filename
+    @cap = max_safe_permutations
     @scratch_order ||= []
   end
 
@@ -48,6 +52,12 @@ class FoodOrder
   def menu_items_from order
     hitems = items.reduce(&:merge)
     order.map {|price| hitems.key(price.to_s) }
+  end
+  
+  def logger
+    @logger ||= Logger.new(STDOUT)
+    @logger.level = Logger::WARN
+    @logger
   end
 end
 

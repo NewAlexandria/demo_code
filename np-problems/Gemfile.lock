@@ -1,0 +1,15 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    memory_profiler (0.9.13)
+    vmstat (2.3.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  memory_profiler
+  vmstat
+
+BUNDLED WITH
+   2.0.1

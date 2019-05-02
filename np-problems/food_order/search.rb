@@ -14,14 +14,13 @@ module FoodOrderSearch
       @order = [spam.values.first] * (target/spam.values.first.to_i) if spam
     end
 
-    def single_order_search compute_cap:14
-      if (prices.size <= compute_cap)
+    def single_order_search allow_swapping:false
+      if (prices.size <= max_safe_permutations) || allow_swapping
         @order = all_order_search.sample
       else
-        raise RangeError.new('','')
+        logger.error "Brute force calculation may cause machine to halt or crash because you lack enough available memory. To force execution, pass in :allow_swapping"
       end
-    rescue RangeError
-      logger.warn "Brute force calculation may cause machine to halt or crash. To force execution, pass a :compute_cap larger than #{prices.size}"
+      logger.warn "Based on available memory, you can handle a menu of #{max_safe_permutations} items. (Your menu has #{prices.size})"
     end
 
     def all_order_search
@@ -34,8 +33,8 @@ module FoodOrderSearch
       all_permutations.reject {|prices| prices.sum > target }
     end
 
-    def all_permutations
-      (min_permutation..max_permutation).reduce([]) do |a,max|
+    def all_permutations minp:min_permutation, maxp:max_permutation
+      (minp..maxp).reduce([]) do |a,max|
         a += prices.repeated_permutation(max).to_a
       end
     end
