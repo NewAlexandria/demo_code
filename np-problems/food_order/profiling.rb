@@ -12,19 +12,14 @@ module FoodOrderProfiling
 
 	module InstanceMethods
 
-    # Profile each permutation cap until we project underperformance
-    def max_safe_permutations
-      mem_uses = []
-      (min_permutation..max_permutation).detect do |itr|
-        report = MemoryProfiler.report do
-          all_permutations minp:min_permutation, maxp:itr
-        end
-        mem_uses << mem_from(report)
-        mem_from(report) >= MEM_GC_LIMIT
-      end
-      logger.info "Mem counts for #{min_permutation} to #{max_permutation} are #{mem_uses.inspect}"
+    attr_accessor :mem_uses
 
-      while (mem_itr_step * mem_uses.last) < MEM_GC_LIMIT do
+    # Profile each permutation cap until we project underperformance
+    # stop at the GC limit, to ensure a consistent memory state
+    def max_safe_permutations
+      memory_step_profile
+
+      while (mem_itr_step * mem_uses.last) < mem_available_limit do
         mem_uses << (mem_itr_step * mem_uses.last)
       end
 
@@ -32,6 +27,22 @@ module FoodOrderProfiling
     end
 
     private
+
+    # Run through permutations, recording the memory allocation for each
+    def memory_step_profile
+      return @mem_uses if @mem_uses && !@mem_uses.empty?
+      @mem_uses = []
+      (min_permutation..max_permutation).detect do |itr|
+        report = MemoryProfiler.report do
+          all_permutations minp:min_permutation, maxp:itr
+        end
+        @mem_uses << mem_from(report)
+        mem_from(report) >= MEM_GC_LIMIT
+      end
+
+      logger.info "Mem counts for #{min_permutation} to #{max_permutation} are #{@mem_uses.inspect}"
+      @mem_uses
+    end
 
     # Size of memory allocations
     # for this codebase, the useful type is Array
@@ -42,7 +53,7 @@ module FoodOrderProfiling
 
     # calculate the delta series for memory allocations,
     # and then return the average
-    def mem_itr_step mem_uses
+    def mem_itr_step
       logger.warn "memory step profiling unlikely accurate with #{mem_uses.size} data" if mem_uses.size <= 3
       (0..mem_uses.length-2)
         .map {|i| mem_uses[i+1] / mem_uses[i].to_f }
