@@ -20,6 +20,7 @@ module FoodOrderSearch
       else
         logger.error "Brute force calculation may cause machine to halt or crash because you lack enough available memory. To force execution, pass in :allow_swapping"
       end
+      logger.warn "Based on available memory, you can handle a menu of #{max_safe_permutations} items. (Your menu has #{prices.size})"
     end
 
     def all_order_search

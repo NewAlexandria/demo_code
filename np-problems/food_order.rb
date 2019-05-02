@@ -56,6 +56,8 @@ class FoodOrder
   
   def logger
     @logger ||= Logger.new(STDOUT)
+    @logger.level = Logger::WARN
+    @logger
   end
 end
 
