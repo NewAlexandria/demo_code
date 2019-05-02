@@ -1,4 +1,5 @@
 require 'memory_profiler'
+require 'vmstat'
 
 module FoodOrderProfiling
 
@@ -49,5 +50,12 @@ module FoodOrderProfiling
         .sum.fdiv(@step_set_size).round(3)
     end
 
+    def mem_free_limit
+      Vmstat.snapshot.memory.free_bytes
+    end
+    
+    def mem_available_limit
+      Vmstat.snapshot.memory.inactive_bytes + mem_free_limit
+    end
   end
 end
