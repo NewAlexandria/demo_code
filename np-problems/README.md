@@ -33,3 +33,11 @@ So this leaves us with:
 * input generator
   * input constraints
 * tests
+
+## Next
+
+* Make `Menu` a class, to handle generation, parsing, etc
+* Make a `Profiler` class to start generically handling the calculation of the problem space
+* `FoodOrder` should be concerned with the _strategy_ of which of its Search tools it can use.
+
+I think after this, we have enough to generically profile any `search` function, and attach the performance metadata to it.  This can be stored as training data, so that newly-available `search` functions can be categorized for use, or excluded, based on profile.
