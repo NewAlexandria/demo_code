@@ -3,16 +3,6 @@ load "food_order/inputs.rb"
 load "food_order/search.rb"
 load "food_order/profiling.rb"
 
-class Symbol
-  def with(*args, &block)
-    lambda { |object| object.public_send(self, *args, &block) }
-  end
-
-  def call(*args, &block)
-    ->(caller, *rest) { caller.send(self, *rest, *args, &block) }
-  end
-end
-
 class FoodOrder
   attr_accessor :items
   attr_reader   :target, :order
@@ -55,9 +45,23 @@ class FoodOrder
   end
   
   def logger
+    self.class.logger
+  end
+
+  def self.logger
     @logger ||= Logger.new(STDOUT)
     @logger.level = Logger::WARN
     @logger
+  end
+end
+
+class Symbol
+  def with(*args, &block)
+    lambda { |object| object.public_send(self, *args, &block) }
+  end
+
+  def call(*args, &block)
+    ->(caller, *rest) { caller.send(self, *rest, *args, &block) }
   end
 end
 

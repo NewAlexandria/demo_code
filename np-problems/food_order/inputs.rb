@@ -44,7 +44,7 @@ module FoodOrderInputs
     end
 
     def gen_appetizer melange=2
-      Faker::Flatbread.title melange
+      Faker::Appetizers.title melange
     end
 
     def price_in_pennies items=[]
@@ -56,7 +56,7 @@ module FoodOrderInputs
 end
 
 module Faker
-  class Flatbread
+  class Appetizers
     class << self
       def title num=3
         "#{ingredients(num)} with #{Faker::Food.vegetables}"
