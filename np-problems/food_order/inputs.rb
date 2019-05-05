@@ -62,14 +62,12 @@ module Faker
         "#{ingredients(num)} with #{Faker::Food.vegetables}"
       end
 
-      def ingredients num, with_spice:true
-      end
-
-      def ingredients melange=3
+      def ingredients melange=3, with_spice:true
+        the_spice = with_spice ? "#{Faker::Food.spice} " : ""
         (1..(rand(melange)+1))
           .map{rand > 0.5 ? Faker::Food.ingredient : Faker::Food.vegetables}
           .shuffle
-          .tap {|arr| arr[-1] = "#{Faker::Food.spice} #{arr.last}" }
+          .tap {|arr| arr[-1] = the_spice + "#{arr.last}" }
           .shuffle.join(' and ')
       end
     end
