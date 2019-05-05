@@ -1,3 +1,5 @@
+require 'faker'
+
 module FoodOrderInputs
 
   def self.included base
@@ -17,6 +19,42 @@ module FoodOrderInputs
 
       items = raw[1..-1].map {|i| Hash[*i] }
       return raw[0][0].to_i, items
+    end
+
+    def menu_generator
+
+    end
+
+    private
+
+    def gen_target_price max=30
+      "#{rand(max)}.#{rand(99)}"
+    end
+
+    def gen_appetizer melange=3
+      Faker::Flatbread.title melange
+
+    end
+  end
+end
+
+module Faker
+  class Flatbread
+    class << self
+      def title num=3
+        "#{ingredients(num)} with #{Faker::Food.dish}"
+      end
+
+      def ingredients num, with_spice:true
+      end
+
+      def ingredients melange=3
+        (1..(rand(melange)+1))
+          .map{rand > 0.5 ? Faker::Food.ingredient : Faker::Food.vegetables}
+          .shuffle
+          .tap {|arr| arr[-1] = "#{Faker::Food.spice} #{arr.last}" }
+          .shuffle.join(' and ')
+      end
     end
   end
 end
