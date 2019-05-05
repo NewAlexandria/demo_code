@@ -55,8 +55,8 @@ describe :food_order do
       expect(subject.items.size).to be > 0
     end
 
-    it 'creates a menu with hash items' do
-      expect(subject.items.map(&:respond_to.with(:keys)).reduce(&:&)).to be_true
+    it 'creates a menu with array items' do
+      expect(subject.items.map(&:respond_to?.with(:[])).reduce(&:&)).to be true
     end
 
     it 'creates a menu with valid prices' do
