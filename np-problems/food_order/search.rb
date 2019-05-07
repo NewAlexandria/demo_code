@@ -40,15 +40,15 @@ module FoodOrderSearch
     end
 
     def min_permutation
-      @min_perm ||= prices.index(
+      (@min_perm ||= prices.index(
         prices.detect {|price| target % price == 0 }
-      ) + 1
+      ) || 0) + 1
     end
 
     def max_permutation
-      @max_perm ||= prices.reverse.index(
+      (@max_perm ||= prices.reverse.index(
         prices.reverse.detect {|price| target % price == 0 }
-      ) + 1
+      ) || 0) + 1
     end
 
   end

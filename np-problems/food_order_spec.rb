@@ -44,5 +44,33 @@ describe :food_order do
       end
     end
   end
+
+  describe :menu_generator do
+    subject { FoodOrder.new(FoodOrder.menu_generator) }
+
+    it 'creates a correctly structured menu' do
+      expect(subject.target).to be_a(Integer)
+      expect(subject.target).to be > 0
+      expect(subject.items).to  be_a(Array)
+      expect(subject.items.size).to be > 0
+    end
+
+    it 'creates a menu with array items' do
+      expect(subject.items.map(&:respond_to?.with(:[])).reduce(&:&)).to be true
+    end
+
+    it 'creates a menu with valid prices' do
+      expect(subject.items.map(&:values).flatten.map(&:to_i).reduce(&:+)).to be > 0
+    end
+
+    context 'with specified size' do
+      let(:the_size) { rand(12) }
+      subject { FoodOrder.new(FoodOrder.menu_generator(the_size)) }
+
+      it 'creates a menu with specified length' do
+        expect(subject.items.size).to eq(the_size)
+      end
+    end
+  end
 end
 
