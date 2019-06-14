@@ -69,6 +69,12 @@ Recording standard unit values makes it easier, later, to compare, group, and en
 
 This demo implementation assumes files that can be read into memory.  
 
+The type/identity recognition, here, will be a static list based on what's evident in the file.  This would be the basis of a reinforcement-learning system for recognizing identities. 
+
+Every un-identified entity/quantity would be left unlabeled until manual intervention and labeling by an SME. Those labels would be used to train an classifier that makes UI suggestions to SMEs in the future, until there is enough reinforcement to auto-label.
+
+The demo code here will make some hard-coded assumptions about the meaning of position, in labeling certain data fields.  The can scale to a true discovery-oriented ML system, by including position as one of the dimensions of a neural net.  Position / field-length encoding has a classic role in ETL as well. 
+
 ### Output Formatting
 
 There are a number of reasons to [separate output formatting from data storage](https://github.com/PeterCamilleri/format_engine), in a system like this.  The practice commonly happens with web content publication, because the consumer of web content can be humans with different reader formats, accessibility needs, or bots that consume for republishing, sharing, or search/crawling.
