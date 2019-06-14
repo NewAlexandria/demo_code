@@ -8,16 +8,16 @@ class Sectioner
 
   def initialize filename:
     raise LoadError.new("File identifier missing") unless filename
-    # validate existence
-    # validate content
+    # TODO validate existence
+    # TODO validate content
     @file = File.read(filename)
     @filename = filename
     @sections = []
     @headers = ["section", "first_line"]
-    self.parse
-    self.clean
-    self.annotate
-    self.pass
+    parse
+    clean
+    annotate
+    pass
   end
 
     def parse
@@ -28,21 +28,26 @@ class Sectioner
     end
 
     def clean
-      @sections.map! {|s| s.split("\n").map {|line| line.strip } }
+      @sections.map! do |s|
+        s.split("\n")
+          .map {|line| line.strip }
+          .reject(&:empty?)
+      end
     end
 
+    # TODO cannot handle multiple matching first-line-of-block
     def annotate
       file_lines = @file.split("\n")
       @sections = @sections.reduce([]) do |a, section|
         line_num = file_lines.index(section.first)
-        a << [section, line_num]
+        a << [section, line_num+1]
       end
     end
 
-    # TODO superclass method
-    # TODO implement method-pass target
-    def pass target:disk
-      self.respond_to?(target) ? self.send(target) : raise(NameError)
+    # TODO for a superclass method
+    def pass save_target=:disk
+      send save_target
+      puts "saved to #{save_target}"
     end
 
     def disk
