@@ -75,6 +75,14 @@ Every un-identified entity/quantity would be left unlabeled until manual interve
 
 The demo code here will make some hard-coded assumptions about the meaning of position, in labeling certain data fields.  The can scale to a true discovery-oriented ML system, by including position as one of the dimensions of a neural net.  Position / field-length encoding has a classic role in ETL as well. 
 
+The system would eventually look to identify a label by
+
+* fuzzy labeling
+* value
+* field position
+
+or a mixture of them.  
+
 ### Output Formatting
 
 There are a number of reasons to [separate output formatting from data storage](https://github.com/PeterCamilleri/format_engine), in a system like this.  The practice commonly happens with web content publication, because the consumer of web content can be humans with different reader formats, accessibility needs, or bots that consume for republishing, sharing, or search/crawling.
