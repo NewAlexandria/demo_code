@@ -6,6 +6,7 @@ class Sectioner
 
   attr_reader :sections
 
+  # We should initialize with IO.foreach and #advise, if the files get large
   def initialize filename:
     raise LoadError.new("File identifier missing") unless filename
     # TODO validate existence
