@@ -67,7 +67,7 @@ Recording standard unit values makes it easier, later, to compare, group, and en
   * retain linkage
 4. fold all back into an output format based on linkages
 
-
+This demo implementation assumes files that can be read into memory.  
 
 ### Output Formatting
 
