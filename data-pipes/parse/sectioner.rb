@@ -41,7 +41,7 @@ class Sectioner
     file_lines = @file.split("\n")
     @sections = @sections.reduce([]) do |a, section|
       line_num = file_lines.index(section.first)
-      a << [section, line_num+1]
+      a << [section, line_num.to_i+1]
     end
   end
 
@@ -59,7 +59,7 @@ class Sectioner
   end
 
   def filename_suffixed
-    @filename.split(/([\.])/).insert( -3,file_suffix ).join
+    @filename.split(/([\.])/).first.concat file_suffix
   end
 
   def file_suffix

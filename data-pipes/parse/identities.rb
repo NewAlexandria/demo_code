@@ -150,7 +150,7 @@ class Identities
   end
 
   def filename_suffixed
-    @filename.split(/([\.])/).insert( -3,file_suffix ).join
+    @filename.split(/([\.])/).first.concat file_suffix
   end
 
   def file_suffix
