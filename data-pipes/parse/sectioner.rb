@@ -52,7 +52,7 @@ class Sectioner
   end
 
   def disk
-    CSV.open(filename_suffixed, 'wb') do |csv|
+    CSV.open(filename_suffixed+'.csv', 'wb') do |csv|
       csv << @headers
       @sections.each {|s| csv << s }
     end

@@ -1,5 +1,6 @@
 #!/usr/bin/sh ruby
 
+require 'pry'
 require 'csv'
 
 class Identities
@@ -16,15 +17,25 @@ class Identities
     @sections = []
     @headers = ["label", "value", "line_pos"]
     parse
-    clean
     annotate
-    #pass
+    clean
+    pass
   end
 
+  # TODO yml source
+  IDENTITY_WORDS = %w{ CID EID EDT ORDER ACCOUNT Med Technician ID NAME Room Loc }
+  IDENTITY_PHRASES = ["Test ind", "Referred by", "Confirmed by", "Vent. rate", "PR interval", "QRS duration", "QT/QTc", "P-R-T axes"]
+
   IDENTITIES = (
-    %w{ CID EID EDT ORDER ACCOUNT Med Technician ID NAME Room Loc }.sort {|a,b| a.length <=> b.length }.reverse +
-    ["Test ind", "Referred by", "Confirmed by", "Vent. rate", "PR interval", "QRS duration", "QT/QTc", "P-R-T axes"].sort {|a,b| a.length <=> b.length }.reverse
+    IDENTITY_WORDS.sort   {|a,b| a.length <=> b.length }.reverse +
+    IDENTITY_PHRASES.sort {|a,b| a.length <=> b.length }.reverse
   ).freeze
+
+  UNIT_RATIOS = %w{ mm/s mm/mV } # '|' chars will break regexes
+  UNIT_QUANTITIES = %w{ lb in YR BPM ms Hz }
+  SEX = %w{ Male Female }
+  RACE = [ "Caucasian", "Latino", "African", "Asian", "Native America", "Decline to self identify"]
+  UNITS = (UNIT_RATIOS + UNIT_QUANTITIES + SEX + RACE).freeze
 
   def parse
     return @sections unless @sections.empty?
@@ -33,12 +44,67 @@ class Identities
   end
 
   def clean
-    #
+    mark_unlabeled_fields
+    split_tab_conjoins
+    split_conjoined_units
+    clean_unit_fields
+    clean_dates
   end
 
   def annotate
     annotate_linenums
     annotate_known_identities
+  end
+
+  def clean_dates
+    @sections.map! do |elem|
+      date_input_format  = /[0-9]{2}-[A-Z]{3}-[0-9]{4}/
+      date_output_format = "%F %H:%M:%S"
+      if elem[1].is_a?(String) && elem[1].match(date_input_format)
+        elem.tap {|e| e[1] = DateTime.parse(elem[1]).strftime(date_output_format) }
+      else
+        elem
+      end
+    end
+  end
+
+  def mark_unlabeled_fields
+    @sections.map! do |elem|
+      elem.size == 2 ? elem.unshift(nil) : elem
+    end
+  end
+
+  # if this is a field with one unit, replace tabs, etc.
+  def clean_unit_fields
+    @sections = @sections.reduce([]) do |a,elem|
+      if elem[1].is_a?(String) && elem[1].scan(units_r).size == 1
+        a << elem.tap {|e| e[1] = e[1].gsub(/\s/,' ') }
+      else
+        a << elem
+      end
+    end
+  end
+
+  def split_tab_conjoins
+    @sections = @sections.reduce([]) do |a,elem|
+      if elem[1].is_a?(String) && elem[1].match(/[\t]{2,}/)
+        elems = elem[1].split(/[\t]+/).map {|e| [elem.first, e, elem.last] }
+        a.concat elems
+      else
+        a << elem
+      end
+    end
+  end
+
+  def split_conjoined_units
+    @sections = @sections.reduce([]) do |a,elem|
+      if elem[1].is_a?(String) && elem[1].scan(units_r).size == 2
+        elems = elem[1].split.map {|e| [elem.first, e, elem.last] }
+        a.concat elems
+      else
+        a << elem
+      end
+    end
   end
 
   # auto-label the data by heuristic: telemetry
@@ -57,7 +123,6 @@ class Identities
   end
 
   def annotate_known_identities
-    ident_r = Regexp.new "("+Identities::IDENTITIES.join("|")+")"
     @sections.map! do |line|
       if line.size == 3
         line
@@ -78,7 +143,7 @@ class Identities
   end
 
   def disk
-    CSV.open(filename_suffixed, 'wb') do |csv|
+    CSV.open(filename_suffixed+'.csv', 'wb') do |csv|
       csv << @headers
       @sections.each {|s| csv << s }
     end
@@ -90,6 +155,14 @@ class Identities
 
   def file_suffix
     "_#{self.class.name.downcase}"
+  end
+
+  def ident_r
+    Regexp.new "("+IDENTITIES.join("|")+")"
+  end
+
+  def units_r
+    Regexp.new( "("+UNITS.join("|")+")" ).freeze
   end
 end
 

@@ -83,6 +83,8 @@ The system would eventually look to identify a label by
 
 or a mixture of them.  
 
+In some places I elected to filter certain actions within a loop.  In a production environment with high-volume data, we would split lists and recombine them, to minimize reprocessing. 
+
 ### Output Formatting
 
 There are a number of reasons to [separate output formatting from data storage](https://github.com/PeterCamilleri/format_engine), in a system like this.  The practice commonly happens with web content publication, because the consumer of web content can be humans with different reader formats, accessibility needs, or bots that consume for republishing, sharing, or search/crawling.
