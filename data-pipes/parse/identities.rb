@@ -1,6 +1,5 @@
 #!/usr/bin/sh ruby
 
-require 'pry'
 require 'csv'
 
 class Identities

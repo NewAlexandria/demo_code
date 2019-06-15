@@ -1,3 +1,23 @@
+# Running
+
+Make sure you have ruby installed.  Ideally ruby >= 2.5.x
+
+On a mac
+
+```
+brew install rbenv ruby-build
+rbenv install 2.5.3
+```
+
+then run
+
+```
+ruby runner.rb
+```
+
+
+# Design
+
 The 3 sample files sent have identical enough data to form a parser that can handle the variances.  If the other ingestion sources will contain similar data then it we will get value out of creating reusable identifiers.  
 
 
@@ -23,11 +43,12 @@ As a bonus, it would be good to contextualize the read so that we minimize the e
 
 Scaling and managing the ingest is best done by eventing most of the process.  Files are probably retrieved via SFTP or similar bulk process.  The healthcare network already uses a cloud, we can host services in the same cloud for the speed / data gravity principle.  Scraping / crawling is [a studied area in ACM and related CS literature](https://dl.acm.org/results.cfm?query=crawler), when we think we can benefit from the cutting-edge. If we find that sourcing the data has a graph component, the common pattern in FOSS tooling is [a bloom filter](https://github.com/igrigorik/bloomfilter-rb) for the worker target cache.
 
-In this take-home, I don't think there's need to build a scraping orchestrator.
+In this take-home, it doesn't look like there is a need to build a scraping orchestrator.
 
 ### Parse
 
 #### Design
+
 The core of the parsing is going to be 
 
 * searching for identities / features
@@ -85,11 +106,13 @@ or a mixture of them.
 
 In some places I elected to filter certain actions within a loop.  In a production environment with high-volume data, we would split lists and recombine them, to minimize reprocessing. 
 
+In the interest of time, I have not use OOO to de-duplicate some code and functions.  Likewise, SRP is not always followed.
+
 ### Output Formatting
 
 There are a number of reasons to [separate output formatting from data storage](https://github.com/PeterCamilleri/format_engine), in a system like this.  The practice commonly happens with web content publication, because the consumer of web content can be humans with different reader formats, accessibility needs, or bots that consume for republishing, sharing, or search/crawling.
 
 Separating output formatting / rendering / presenters ensures that the data warehouse remains a consistent source of truth, while allowing for many different consumers of the data platform.
 
-
+The demo does not do this.
 
