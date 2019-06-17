@@ -4,8 +4,13 @@ require 'csv'
 
 class Parser
 
-  def initialize
-    raise 'this method should be overriden and return the db name'
+  def initialize filename:
+    raise LoadError.new("File identifier missing") unless filename
+    # TODO validate existence
+    # TODO validate content
+    @file = CSV.read(filename)
+    @filename = filename
+    @sections = []
   end
 
   # TODO for a superclass method
@@ -16,7 +21,7 @@ class Parser
 
   def disk
     CSV.open(filename_suffixed+'.csv', 'wb') do |csv|
-      csv << @headers
+      csv << headers
       @sections.each {|s| csv << s }
     end
   end
@@ -27,5 +32,9 @@ class Parser
 
   def file_suffix
     "_#{self.class.name.downcase}"
+  end
+
+  def headers
+    self.class::HEADERS
   end
 end

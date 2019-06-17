@@ -11,17 +11,12 @@ class Identities < Parser
 
   include UnitsIdentities
 
-  attr_reader :ids
-  attr_reader :sections, :headers, :file
+  attr_reader :sections
+
+  HEADERS = ["label", "value", "line_pos"]
 
   def initialize filename:
-    raise LoadError.new("File identifier missing") unless filename
-    # TODO validate existence
-    # TODO validate content
-    @file = CSV.read(filename)
-    @filename = filename
-    @sections = []
-    @headers = ["label", "value", "line_pos"]
+    super
     parse
     annotate
     clean
