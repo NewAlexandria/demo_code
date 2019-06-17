@@ -1,20 +1,22 @@
 #!/usr/bin/sh ruby
 
-require 'csv'
+$LOAD_PATH << 'parse'
 
-class Sectioner
+load 'parse/parser.rb'
+require 'units_identities'
+require 'csv'
+require 'json'
+
+class Sectioner < Parser
 
   attr_reader :sections
 
+  HEADERS = ["section", "first_line"]
+
   # We should initialize with IO.foreach and #advise, if the files get large
   def initialize filename:
-    raise LoadError.new("File identifier missing") unless filename
-    # TODO validate existence
-    # TODO validate content
+    super
     @file = File.read(filename)
-    @filename = filename
-    @sections = []
-    @headers = ["section", "first_line"]
     parse
     clean
     annotate
@@ -44,27 +46,4 @@ class Sectioner
       a << [section, line_num.to_i+1]
     end
   end
-
-  # TODO for a superclass method
-  def pass save_target=:disk
-    send save_target
-    puts "saved to #{save_target}"
-  end
-
-  def disk
-    CSV.open(filename_suffixed+'.csv', 'wb') do |csv|
-      csv << @headers
-      @sections.each {|s| csv << s }
-    end
-  end
-
-  def filename_suffixed
-    @filename.split(/([\.])/).first.concat file_suffix
-  end
-
-  def file_suffix
-    "_#{self.class.name.downcase}"
-  end
 end
-
-

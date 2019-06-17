@@ -1,40 +1,27 @@
 #!/usr/bin/sh ruby
 
+$LOAD_PATH << 'parse'
+
+load 'parse/parser.rb'
+require 'units_identities'
 require 'csv'
+require 'json'
 
-class Identities
+class Identities < Parser
 
-  attr_reader :ids
-  attr_reader :sections, :headers, :file
+  include UnitsIdentities
+
+  attr_reader :sections
+
+  HEADERS = ["label", "value", "line_pos"]
 
   def initialize filename:
-    raise LoadError.new("File identifier missing") unless filename
-    # TODO validate existence
-    # TODO validate content
-    @file = CSV.read(filename)
-    @filename = filename
-    @sections = []
-    @headers = ["label", "value", "line_pos"]
+    super
     parse
     annotate
     clean
     pass
   end
-
-  # TODO yml source
-  IDENTITY_WORDS = %w{ CID EID EDT ORDER ACCOUNT Med Technician ID NAME Room Loc }
-  IDENTITY_PHRASES = ["Test ind", "Referred by", "Confirmed by", "Vent. rate", "PR interval", "QRS duration", "QT/QTc", "P-R-T axes"]
-
-  IDENTITIES = (
-    IDENTITY_WORDS.sort   {|a,b| a.length <=> b.length }.reverse +
-    IDENTITY_PHRASES.sort {|a,b| a.length <=> b.length }.reverse
-  ).freeze
-
-  UNIT_RATIOS = %w{ mm/s mm/mV } # '|' chars will break regexes
-  UNIT_QUANTITIES = %w{ lb in YR BPM ms Hz }
-  SEX = %w{ Male Female }
-  RACE = [ "Caucasian", "Latino", "African", "Asian", "Native America", "Decline to self identify"]
-  UNITS = (UNIT_RATIOS + UNIT_QUANTITIES + SEX + RACE).freeze
 
   def parse
     return @sections unless @sections.empty?
@@ -57,10 +44,8 @@ class Identities
 
   def clean_dates
     @sections.map! do |elem|
-      date_input_format  = /[0-9]{2}-[A-Z]{3}-[0-9]{4}/
-      date_output_format = "%F %H:%M:%S"
-      if elem[1].is_a?(String) && elem[1].match(date_input_format)
-        elem.tap {|e| e[1] = DateTime.parse(elem[1]).strftime(date_output_format) }
+      if elem[1].is_a?(String) && elem[1].match(DATE_INPUT_FORMAT)
+        elem.tap {|e| e[1] = DateTime.parse(elem[1]).strftime(DATE_OUTPUT_FORMAT) }
       else
         elem
       end
@@ -135,34 +120,4 @@ class Identities
     end
   end
 
-  # TODO for a superclass method
-  def pass save_target=:disk
-    send save_target
-    puts "saved to #{save_target}"
-  end
-
-  def disk
-    CSV.open(filename_suffixed+'.csv', 'wb') do |csv|
-      csv << @headers
-      @sections.each {|s| csv << s }
-    end
-  end
-
-  def filename_suffixed
-    @filename.split(/([\.])/).first.concat file_suffix
-  end
-
-  def file_suffix
-    "_#{self.class.name.downcase}"
-  end
-
-  def ident_r
-    Regexp.new "("+IDENTITIES.join("|")+")"
-  end
-
-  def units_r
-    Regexp.new( "("+UNITS.join("|")+")" ).freeze
-  end
 end
-
-
