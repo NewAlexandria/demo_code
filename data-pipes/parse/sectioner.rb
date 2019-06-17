@@ -3,9 +3,6 @@
 $LOAD_PATH << 'parse'
 
 load 'parse/parser.rb'
-require 'units_identities'
-require 'csv'
-require 'json'
 
 class Sectioner < Parser
 
