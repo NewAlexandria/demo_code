@@ -1,0 +1,75 @@
+module RubyMaths
+  class CalcNeededReserves
+    def initialize(debug: false)
+      @debug = debug
+    end
+
+    def solution(r, v)
+      validate_inputs(r,v)
+      rr = r.split('')
+
+      has   = {A: 0, B: 0}
+      needs = {A: 0, B: 0}
+      rr.each.with_index do |target, idx|
+
+        sender = (target == 'A') ? 'B' : 'A'
+        if @debug
+          puts v[idx] , sender
+          puts has[sender.to_sym]
+        end
+
+        now_needs = (nn = (has[sender.to_sym] - v[idx])).negative? ? nn.abs : 0
+        needs[sender.to_sym] += now_needs
+        has[sender.to_sym] += now_needs
+        has[sender.to_sym] -= v[idx]
+
+        has[target.to_sym] += v[idx]
+
+      end
+      needs.values
+    end
+
+    def validate_inputs(r, v)
+      {
+        equal_size:              -> { r.size == v.size },
+        exceeds_max_tx_count:    -> { r.size <= 100_000 },
+        too_small_tx_exists:     -> { v.min >= 1 },
+        too_large_tx_exists:     -> { v.max <= 10_000 },
+        string_recipient_list:   -> { r.is_a?(String) },
+        invalid_recipient_codes: -> { (r.split('') - ['A', 'B']).size.zero? },
+        tx_list_not_array:       -> { (v.is_a?(Array)) },
+        tx_list_not_all_ints:    -> { (v.map{|e| e.class }.uniq.size == 1) },
+        tx_list_not_ints:        -> { (v.first.class == Integer) },
+      }.map do |(code,func)|
+        raise StandardError.new(code) unless func.call
+      end.compact.empty?
+    end
+
+    def simulate(max_tx: 100, max_amt: 10)
+      valid_r = (1..max_tx).map{|i| ['A','B'].sample }.join
+      valid_v = (1..max_tx).map{|i| rand(1..max_amt) }
+      needed = solution(valid_r, valid_v)
+      [ valid_r, valid_v.join(', '), needed ]
+    end
+
+    def test
+      r, v, bases = simulate
+      rr = r.split('')
+      has = { A: bases.first, B: bases.last }
+      too_low = rr.find.with_index do |target, idx|
+        sender = (target == 'A') ? 'B' : 'A'
+
+        if @debug
+          puts has
+        end
+
+        has[sender.to_sym] -= v[idx]
+        has[target.to_sym] += v[idx]
+
+        has[sender.to_sym].negative? || has[target.to_sym].negative?
+      end
+
+      reutnr false if too_low
+    end
+  end
+end
