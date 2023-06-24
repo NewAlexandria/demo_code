@@ -1,32 +1,40 @@
+# require 'pry'
+
 module RubyMaths
   class CalcNeededReserves
+    attr_accessor :debug
     def initialize(debug: false)
       @debug = debug
+      @debug_log = []
     end
 
     def solution(r, v)
       validate_inputs(r,v)
       rr = r.split('')
 
-      has   = {A: 0, B: 0}
-      needs = {A: 0, B: 0}
+      has   = {'A' => 0, 'B' => 0}
+      needs = {'A' => 0, 'B' => 0}
+      @debug_log << "🔴 solution calc, size #{rr.size}" if @debug
       rr.each.with_index do |target, idx|
 
         sender = (target == 'A') ? 'B' : 'A'
         if @debug
-          puts v[idx] , sender
-          puts has[sender.to_sym]
+          @debug_log << ['🔴 idx', v[idx]]
+          @debug_log << ['🔴 has', has]
+          @debug_log << ['🔴 needs', needs]
         end
 
-        now_needs = (nn = (has[sender.to_sym] - v[idx])).negative? ? nn.abs : 0
-        needs[sender.to_sym] += now_needs
-        has[sender.to_sym] += now_needs
-        has[sender.to_sym] -= v[idx]
+        now_needs = (nn = (has[sender] - v[idx])).negative? ? nn.abs : 0
+        needs[sender] += now_needs
+        has[sender] += now_needs
 
-        has[target.to_sym] += v[idx]
-
+        has[sender] -= v[idx]
+        has[target] += v[idx]
       end
       needs.values
+    ensure
+      puts @debug_log
+      @debug_log = []
     end
 
     def validate_inputs(r, v)
@@ -49,27 +57,36 @@ module RubyMaths
       valid_r = (1..max_tx).map{|i| ['A','B'].sample }.join
       valid_v = (1..max_tx).map{|i| rand(1..max_amt) }
       needed = solution(valid_r, valid_v)
-      [ valid_r, valid_v.join(', '), needed ]
+      [ valid_r, valid_v, needed ]
     end
 
     def test
       r, v, bases = simulate
       rr = r.split('')
-      has = { A: bases.first, B: bases.last }
+      has = { 'A' => bases.first, 'B' => bases.last }
+
+      if @debug
+        @debug_log << "🔵 test. size #{rr.size}"
+        @debug_log << "🔵 r #{r}" << "🔵 v #{v}" << "🔵 bases #{bases}"
+      end
       too_low = rr.find.with_index do |target, idx|
         sender = (target == 'A') ? 'B' : 'A'
 
         if @debug
-          puts has
+          @debug_log << ['🔵 has', has]
+          @debug_log << ['🔵 val', v[idx]]
         end
 
-        has[sender.to_sym] -= v[idx]
-        has[target.to_sym] += v[idx]
+        has[sender] -= v[idx]
+        has[target] += v[idx]
 
-        has[sender.to_sym].negative? || has[target.to_sym].negative?
+        has[sender].negative? || has[target].negative?
       end
 
-      reutnr false if too_low
+      return !too_low
+    ensure
+      puts @debug_log
+      @debug_log = []
     end
   end
 end
