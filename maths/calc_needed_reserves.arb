@@ -1,6 +1,6 @@
 # require 'pry'
 
-module RubyMaths
+module Maths
   class CalcNeededReserves
     attr_accessor :debug
     def initialize(debug: false)

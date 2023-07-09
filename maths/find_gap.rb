@@ -1,4 +1,4 @@
-module RubyMaths
+module Maths
   class FindGap
     def initialize(debug: false)
       @debug = debug
